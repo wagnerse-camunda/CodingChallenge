@@ -11,6 +11,8 @@ To set up a cluster follow the instructions in the [Camunda Docs](https://docs.c
 
 You can run the application as a standalone Spring Boot application, using Docker Compose, or deploy it to a Kubernetes cluster using Helm.
 
+A short API description for generating and retrieving images can be found [here](#generating-and-retrieving-animal-pictures).
+
 ## Running the Application
 
 ### Run as a Standalone Spring Boot application
