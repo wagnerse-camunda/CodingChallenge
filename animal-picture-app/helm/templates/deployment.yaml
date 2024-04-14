@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "animal-picture-app.fullname" . }}
+  labels:
+    {{- include "animal-picture-app.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "animal-picture-app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "animal-picture-app.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "animal-picture-app.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 120
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 120
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: ZEEBE_REGION
+              value: {{ .Values.env.ZEEBE_REGION }}
+            - name: ZEEBE_CLUSTER_ID
+              value: {{ .Values.env.ZEEBE_CLUSTER_ID }}
+            - name: ZEEBE_CLIENT_ID
+              value: {{ .Values.env.ZEEBE_CLIENT_ID }}
+            - name: ZEEBE_CLIENT_SECRET
+              value: {{ .Values.env.ZEEBE_CLIENT_SECRET }}
+            - name: DB_HOSTNAME
+              value: {{ "animal-picture-app-release-animalpicturedb" }}
+            - name: DB_PORT
+              value: {{ "5432" | quote }}
+            - name: DB_NAME
+              value: {{ .Values.animalpicturedb.global.postgresql.auth.database }}
+            - name: DB_USERNAME
+              value: {{ .Values.animalpicturedb.global.postgresql.auth.username }}
+            - name: DB_PASSWORD
+              value: {{ .Values.animalpicturedb.global.postgresql.auth.password }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: animaldb
+      POSTGRES_USER: animaluser
+      POSTGRES_PASSWORD: animalpass
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  animal-picture-app:
+    image: docker.io/wagerse/animal-picture-app:latest
+    environment:
+      # Database configuration
+      DB_HOSTNAME: postgres
+      DB_PORT: 5432
+      DB_NAME: animaldb
+      DB_USERNAME: animaluser
+      DB_PASSWORD: animalpass
+      # Zeebe cluster configuration
+      ZEEBE_REGION: bru-2
+      ZEEBE_CLUSTER_ID: c7e5c022-6f75-491c-8f2b-997f2ec7b58c
+      ZEEBE_CLIENT_ID: Y9A4bLqx26uFFMXpkoWPR1Kyl4MINaHQ
+      ZEEBE_CLIENT_SECRET: xZTGeKHN4xmYoQ_SdiIOLplnDH~JaI9nXNqJaiDtdDl3vC2ehfDeNA9owaSX2a9S
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+
+volumes:
+  db-data:
