@@ -76,6 +76,7 @@ Simply run the following command in the root directory of the project to start t
 docker-compose up
 ```
 
+
 ### Run the Application on Kubernetes with Helm
 You can deploy the application to a Kubernetes cluster using Helm. 
 Ensure you have Helm [installed](https://helm.sh/docs/intro/install/) on your machine and a Kubernetes cluster or a local Kubernetes engine such as Minikube available.
@@ -105,6 +106,19 @@ To retrieve the animal pictures perform a GET request to `http://localhost:8080/
 
 Please replace the base URL `http://localhost:8080` with your application's host and port.
 Note, for Spring standalone applications and Docker Compose, the base URL is by default `http://localhost:8080`.
+
+## Build the Docker Image
+If you updated the application, you need to rebuild the Docker image:
+
+```bash
+/mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=wagerse/animal-picture-app
+```
+
+You can push the image to the Docker registry with the following command:
+
+```bash
+docker push wagerse/animal-picture-app
+```
 
 
 
