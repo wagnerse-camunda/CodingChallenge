@@ -98,6 +98,9 @@ Run the following commands in the `animal-picture-app` folderto deploy the appli
   helm install animal-picture-app-release ./helm
 ```
 
+The application is available from outside your Kubernetes cluster through port 30007.
+If you are using a local Kubernetes dev cluster, such as Kind, you may need to configure it, to forward calls to port 30007 to the cluster nodes (for Kind this is described [here](https://kind.sigs.k8s.io/docs/user/configuration/#extra-port-mappings)).
+
 ## Generating and Retrieving Animal Pictures
 To generate the animal pictures perform a POST request to `http://localhost:8080/animal-picture/{animalType}`.
 Where `animalType` can be `bear`, `cat`, or `dog`.
