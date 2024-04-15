@@ -39,14 +39,14 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/liveness
               port: http
-            initialDelaySeconds: 120
+            initialDelaySeconds: 80
           readinessProbe:
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/readiness
               port: http
-            initialDelaySeconds: 120
+            initialDelaySeconds: 80
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
@@ -59,9 +59,9 @@ spec:
             - name: ZEEBE_CLIENT_SECRET
               value: {{ .Values.env.ZEEBE_CLIENT_SECRET }}
             - name: DB_HOSTNAME
-              value: {{ "animal-picture-app-release-animalpicturedb" }}
+              value: {{ .Release.Name}}-animalpicturedb
             - name: DB_PORT
-              value: {{ "5432" | quote }}
+              value: "5432"
             - name: DB_NAME
               value: {{ .Values.animalpicturedb.global.postgresql.auth.database }}
             - name: DB_USERNAME
