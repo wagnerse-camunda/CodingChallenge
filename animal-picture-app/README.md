@@ -114,7 +114,7 @@ Note, for Spring standalone applications and Docker Compose, the base URL is by 
 If you updated the application, you need to rebuild the Docker image:
 
 ```bash
-/mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=wagerse/animal-picture-app
+./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=wagerse/animal-picture-app
 ```
 
 You can push the image to the Docker registry with the following command:
